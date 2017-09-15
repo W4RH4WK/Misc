@@ -1,0 +1,54 @@
+\documentclass{scrartcl}
+
+% font
+\usepackage[math]{iwona}
+\usepackage[no-math]{fontspec}
+    \setmainfont{DroidSerif}
+    \setsansfont{Ubuntu Light}
+    \setmonofont{DroidSansMono}[Scale=0.8]
+    \renewcommand{\familydefault}{\sfdefault}
+
+% unicode abbr
+\usepackage{newunicodechar}
+    \newunicodechar{〈}{$\langle$}
+    \newunicodechar{〉}{$\rangle$}
+
+% color
+\usepackage{xcolor}
+    \definecolor{uibkblue}{cmyk}{1.0, 0.6, 0.0, 0.56}
+
+% basics
+\usepackage{soul}
+\newcommand{\rom}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+% math
+\usepackage{amsmath}
+\usepackage{amssymb}
+    \let\emptyset\varnothing
+\usepackage{mathtools}
+    \mathtoolsset{centercolon}
+\usepackage{amsthm}
+    \newtheoremstyle{plain}{\topsep}{\topsep}{\normalfont}{10pt}{\bfseries}{\normalfont:}{5pt}{}
+    \theoremstyle{plain}
+    \newtheorem{theorem}{Theorem}[section]
+    \newtheorem{corollary}[theorem]{Corollary}
+    \newtheorem{definition}[theorem]{Definition}
+    \renewcommand{\proofname}{Proof:}
+    \newtheorem{notation}[theorem]{Notation}
+
+% SI units
+\usepackage[binary-units,per-mode=symbol]{siunitx}
+    \sisetup{detect-all}
+
+% graphics
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+
+% additional symbols
+\usepackage{MnSymbol}
+
+\begin{document}
+\thispagestyle{empty}
+%BODY%
+\end{document}

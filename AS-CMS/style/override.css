@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+header h3 {
+    line-height: normal;
+}
+
+nav .nav {
+    margin-bottom: 0px;
+}
+
+nav .nav > li > a {
+    background-color: #164759;
+    color: #95B8E0;
+}
+
+nav .nav > li > a:hover {
+    background-color: #FF9302;
+    color: #164759;
+}
+
+nav .nav-tabs .open .dropdown-toggle,
+nav .nav-pills .open .dropdown-toggle,
+nav .nav > li.dropdown.open.active > a:hover {
+    background-color: #728AA7;
+    color: #164759;
+}
+
+nav .dropdown-menu {
+    background-color: #FF9302;
+}
+
+nav .dropdown-menu li > a:hover,
+nav .dropdown-menu .active > a,
+nav .dropdown-menu .active > a:hover {
+    background-color: #164759;
+    color: #95B8E0;
+}
+
+#sidemenu .nav-list > li > a {
+    padding: 1px 15px;
+}
+
+footer .row-fluid [class*="span"] {
+    min-height: 0;
+}
+
+#page #messages .alert {
+    margin: 4px 0px;
+}
+
+#page #messages .alert .close {
+    font-size: 14px;
+}
+
+#page #messages .backtrace {
+    font-size: 10px;
+    margin-bottom: 0px;
+    padding-left: 20px;
+}
+
+#page #messages .backtrace li {
+    line-height: normal;
+}
+
+.modal {
+    width: 820px;
+    margin-left: -410px;
+}

@@ -1,0 +1,32 @@
+%\usetikzlibrary{arrows.meta}
+%\usetikzlibrary{positioning}
+
+\tikzstyle{ptr} = [-{Latex[length=2.7mm]}]
+
+\tikzstyle{loop} = [ptr,looseness=10]
+
+\tikzstyle{block} = [
+    draw,
+    align=center,
+    rectangle,
+    minimum height=0.8cm,
+    minimum width=1.6cm
+]
+
+\begin{tikzpicture}
+
+    \node[block] (1) {\ttfamily x = 1};
+    \node[block] (2) at (-1,-1.5) {\ttfamily x = 2};
+    \node[block] (3) at ( 1,-1.5) {\ttfamily x = 3};
+    \node[block] (4) [below = 2.2cm of 1] {\ttfamily return x};
+
+    \path[ptr,dashed] (1) edge (2)
+                      (1) edge (3)
+                      (2) edge (4)
+                      (3) edge (4);
+
+    \foreach \x in {1,2,4}
+        \node at ($(\x.west)-(0.25,0)$) {\x};
+    \node at ($(3.east)+(0.25,0)$) {3};
+
+\end{tikzpicture}

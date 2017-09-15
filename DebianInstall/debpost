@@ -1,0 +1,211 @@
+#!/bin/bash
+
+# exit if not root
+if [ $EUID -ne 0 ]; then
+    echo "run as root"
+    exit 1
+fi
+
+# -------------------------------------------------- BASICS
+install_tools() {
+    apt-get update
+
+    apt-get -y dist-upgrade
+
+    apt-get -y install \
+        ack-grep \
+        bash-completion \
+        curl \
+        git \
+        htop \
+        less \
+        lftp \
+        ntp\
+        rsync \
+        tree \
+        tmux \
+        vim
+}
+
+suppress_login_message() {
+    touch ~/.hushlogin
+    sed -i '$isetterm -blank 0' /etc/rc.local
+}
+
+tweak_ssh_config() {
+    cat >> /etc/ssh/sshd_config << EOF
+UseDNS no
+GatewayPorts yes
+AllowTcpForwarding yes
+ClientAliveInterval 60
+ClientAliveCountMax 3
+Compression yes
+EOF
+
+    cat >> /etc/ssh/ssh_config << EOF
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+EOF
+}
+
+create_ssh_key() {
+    ssh-keygen -t rsa -b 4096 -C "$(hostname)" -N "" -f ~/.ssh/id_rsa
+}
+
+# -------------------------------------------------- ADVANCED
+setup_backup() {
+    apt-get install -y cifs-utils smbclient
+    mkdir -p ~/backup/logs
+    cp files/backup.sh ~/backup/run
+    chmod 700 ~/backup/run
+
+    echo '#20  *   *   *   *   root    /usr/bin/flock -n /root/backup/lock /root/backup/run' >> /etc/crontab
+    echo '#//1.3.3.7/backup /mnt/backup cifs iocharset=utf8,file_mod=0644,dir_mod=0755,guest 0 0' >> /etc/fstab
+}
+
+# $1 = host
+# $2 = port
+# $3 = save port
+setup_relay() {
+    host="$1"
+    port="$2"
+    save="$3"
+
+    apt-get -y install autossh
+
+    # add to autostart
+    sed -i "\$i(sleep 20; autossh -M $save -f -N -R $port:localhost:22 $host) &" /etc/rc.local
+
+    echo "--------------------------------------------------" >> note.txt
+    echo "add this key to your authorized_keys file" >> note.txt
+    cat ~/.ssh/id_rsa.pub >> note.txt
+
+    echo >> note.txt
+    echo "connect manually to add his key" >> note.txt
+    echo "\$ ssh $host" >> note.txt
+    echo "--------------------------------------------------" >> note.txt
+}
+
+setup_samba() {
+    apt-get install -y samba smbclient cifs-utils
+    cp /etc/samba/smb.conf /etc/samba/smb.conf.org
+    cp files/smb.conf /etc/samba/smb.conf
+    service samba restart
+}
+
+setup_watchdog() {
+    git clone https://github.com/W4RH4WK/watchdogScripts.git ~/watchdog
+    pushd ~/watchdog
+    ~/watchdog/setup
+    popd
+}
+
+# -------------------------------------------------- MISC
+add_bash_aliases() {
+    cat >> ~/.bashrc << EOF
+
+if [ -f ~/.bash_aliases ]; then
+    source ~/.bash_aliases
+fi
+EOF
+
+    cp files/bash_aliases ~/.bash_aliases
+    cp files/bash_aliases /etc/skel/.bash_aliases
+}
+
+add_git_config() {
+    cp files/gitconfig ~/.gitconfig
+    chmod 600 ~/.gitconfig
+}
+
+add_htoprc() {
+    mkdir -p ~/.config/htop
+    cp files/htoprc ~/.config/htop/htoprc
+}
+
+add_pub_key() {
+    mkdir ~/.ssh
+    chmod 700 ~/.ssh
+    cp files/id_rsa.pub ~/.ssh/authorized_keys
+    chmod 600 ~/.ssh/authorized_keys
+}
+
+add_tmux_config() {
+    cp files/tmux.conf ~/.tmux.conf
+}
+
+add_vimrc() {
+    cp files/vimrc /etc/vim/vimrc
+}
+
+add_urxvt_config() {
+    cp -r files/urxvt ~/.urxvt
+    cat files/urxvt.conf >> ~/.Xresources
+}
+
+change_locale() {
+    dpkg-reconfigure locales
+}
+
+change_password() {
+    passwd
+}
+
+change_timezone() {
+    dpkg-reconfigure tzdata
+}
+
+diable_password_auth() {
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+}
+
+enable_automatic_packagelist_update() {
+    cat >> /etc/apt/apt.conf.d/20auto-upgrades << EOF
+APT::Periodic::AutocleanInterval "5";
+APT::Periodic::Enable "1";
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Verbose "1";
+EOF
+}
+
+# -------------------------------------------------- MAIN
+main() {
+    # basics
+    install_tools
+    suppress_login_message
+    tweak_ssh_config
+    create_ssh_key
+
+    # misc
+    #add_bash_aliases
+    #add_git_config
+    #add_htoprc
+    #add_pub_key
+    #add_tmux_config
+    #add_vimrc
+    #add_urxvt_config
+    #change_locale
+    #change_password
+    #change_timezone
+    #diable_password_auth
+    #enable_automatic_packagelist_update
+
+    # advanced
+    #setup_backup
+    #setup_relay "user@host.com" "50XX" "60XX"
+    #setup_samba
+    #setup_watchdog
+
+    echo "--------------------------------------------------"
+    echo "    setup completed, you migth want to reboot     "
+    echo "--------------------------------------------------"
+    echo
+
+    if [[ -f "note.txt" ]]; then
+        cat note.txt
+    fi
+}
+
+if [[ "$BASH_SOURCE" == "$0" ]]; then
+    main "$@"
+fi

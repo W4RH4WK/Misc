@@ -1,0 +1,123 @@
+% 2015 | UIBK
+% vim:set spell tw=79:
+
+\documentclass[beamer]{uibk}
+\title{title}
+\subtitle{subtitle}
+\author{Alex Hirsch}
+\date{2015-01-01}
+
+\AtBeginSection[] {
+    \begin{frame}{Outline}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Outline}
+    \tableofcontents
+\end{frame}
+
+\begin{frame}{Weighted Stego (WS) Analysis}
+    $ p \dots \text{embedding rate} \in [0,1] $
+
+    $ x^{(0)} \dots \text{cover} $
+
+    $ x^{(p)} \dots \text{stego} $
+
+    $ \bar{x}^{(p)} \dots \text{stego with all LSB flipped} $
+
+    \[ p = 2 \lambda \sum_i \left(\lambda\bar{x}_i^{(p)} + (1 - \lambda) x_i^{(p)} - x_i^{(0)}\right)^2 \]
+
+    $x^{(0)}$ unknown $\to$ need prediction ($\mathcal{F}$)
+\end{frame}
+
+\begin{frame}{Basics}
+
+    Lorem \emph{ipsum} dolor \alert{sit} amet, \st{consectetuer} adipiscing
+    elit\footnotemark.
+
+    \footnotetext{blob}
+
+    \begin{itemize}
+        \item<1-> item 1
+        \item<2-> item 2
+    \end{itemize}
+
+    \color{uibkorange} coloured text 1 \\
+    \color{uibkgreen}  coloured text 2
+
+    \sidenote{- uibk.ac.at}
+\end{frame}
+
+\begin{frame}{Parskip}
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit,
+    vestibulum ut, placerat ac, adipiscing vitae, felis.
+
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit,
+    vestibulum ut, placerat ac, adipiscing vitae, felis.
+
+    \smallskip
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit,
+    vestibulum ut, placerat ac, adipiscing vitae, felis.
+
+    \medskip
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit,
+    vestibulum ut, placerat ac, adipiscing vitae, felis.
+
+    \bigskip
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit,
+    vestibulum ut, placerat ac, adipiscing vitae, felis.
+\end{frame}
+
+\begin{frame}{Columns}
+    \begin{columns}[c]
+        \begin{column}{.49\textwidth}
+            Current Law \[\sum^n_{k=1} V_k = 0\]
+            Voltage Law \[\sum^n_{k=1} I_k = 0\]
+        \end{column}
+        \begin{column}{.49\textwidth}
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus
+            elit, vestibulum ut, placerat ac, adipiscing vitae, felis.
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Blocks}
+    \begin{block}{Block}
+        Some text.
+    \end{block}
+
+    \begin{alertblock}{Alert Block}
+        Some text.
+    \end{alertblock}
+
+    \begin{exampleblock}{Example Block}
+        Some text.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Math Blocks}
+    \begin{definition}
+        Some text.
+    \end{definition}
+
+    \begin{theorem}
+        Some text.
+    \end{theorem}
+
+    \begin{proof}
+        Some text.
+    \end{proof}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \huge{Thank you for your attention!}
+    \end{center}
+\end{frame}
+
+\end{document}

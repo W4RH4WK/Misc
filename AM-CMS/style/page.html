@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- charset -->
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+        <!-- author -->
+        <meta name="author" content="Alex W4RH4WK Hirsch">
+
+        <!-- robots -->
+        <meta name="robots" content="index, follow">
+        <meta name="revisit-after" content="7 days">
+
+        <!-- title -->
+        <title>A Minimalistic CMS</title>
+
+        <!-- fav icon -->
+        <link rel="shortcut icon" href="style/img/fav.ico" type="image/ico" />
+
+        <!-- bootstrap css -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap-responsive.min.css" />
+
+        <!-- lightbox css -->
+        <link rel="stylesheet" type="text/css" href="lib/lightbox/css/lightbox.css" />
+
+        <!-- custom css -->
+        <link rel="stylesheet" type="text/css" href="style/override.css" />
+        <link rel="stylesheet" type="text/css" href="style/style.css" />
+
+        <!-- jquery -->
+        <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="lib/jquery/settings.js"></script>
+
+        <!-- bootstrap -->
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+        <!-- lightbox -->
+        <script type="text/javascript" src="lib/lightbox/js/lightbox.js"></script>
+
+        <!-- additional includes -->
+        <?php echo $data["h"]; ?>
+
+    </head>
+    <body>
+        <!-- logo -->
+        <div id="logo"><img src="style/img/logo.png" /></div>
+
+        <!-- main page -->
+        <div id="page">
+            <header>
+                <div class="row-fluid">
+                    <div class="span8">
+                        <nav>
+                            <?php echo Core::inc("style/nav.html"); ?>
+                        </nav>
+                    </div>
+                    <div class="span4">
+                        <h3>A Minimalistic CMS</h3>
+                    </div>
+                </div>
+            </header>
+
+            <section>
+                <?php echo $data["c"]; ?>
+            </section>
+
+            <footer style="text-align: center">Alex W4RH4WK Hirsch</footer>
+
+            <!-- Message Box -->
+            <?php 
+                $m = Core::getMsg();
+                if ($m != "")
+                    echo "<div id=\"messages\">$m</div>";
+            ?>
+        </div>
+
+        <!-- link panel below page -->
+        <div id="links">
+            <a href="http://www.w3.org/html/logo/" rel="tooltip" title="HTML 5 is used"><img src="style/img/html5.png" alt="HTML 5" /></a>
+            <a href="http://www.w3.org/Style/CSS/" rel="tooltip" title="CSS 3 is used"><img src="style/img/css3.png" alt="CSS 3" /></a>
+            <a href="http://github.com/W4RH4WK/AM-CMS" rel="tooltip" title="Opensource on Github"><img src="lib/glyphicons/glyphicons_381_github.png" alt="Github" /></a>
+            <a href="http://twitter.github.com/bootstrap/index.html" rel="tooltip" title="Twitter Bootstrap is used"><img src="style/img/bootstrap.ico" alt="Bootstrap" /></a>
+            <a href="http://jquery.com/" rel="tooltip" title="JQuery is used"><img src="style/img/jquery.png" alt="JQuery" /></a>
+            <a href="http://lokeshdhakar.com/projects/lightbox2/" rel="tooltip" title="Lightbox is used"><img src="style/img/lightbox.gif" alt="Lightbox 2" /></a>
+            <a href="http://glyphicons.com/" rel="tooltip" title="Glyphicons are used"><img src="style/img/glyph.ico" alt="Glyph Icons" /></a>
+            <a rel="tooltip" title="<?php echo Core::version; ?>"><img src="style/img/amcms.png" alt="AM-CMS" /></a>
+        </div>
+        <script type="text/javascript">
+            $("#links a").tooltip();
+        </script>
+
+    </body>
+</html>

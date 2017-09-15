@@ -1,0 +1,21 @@
+#files a {
+    -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+    -webkit-transition: all 0.2s ease-out;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+    display: inline-table;
+    line-height: 1em;
+    margin-bottom: 32px;
+    margin-left: 12px;
+    margin-right: 12px;
+    padding: 7px;
+    transition: all 0.2s ease-out;
+}
+
+#files a:hover {
+    background-color: #08C;
+}

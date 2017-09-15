@@ -1,0 +1,20 @@
+# Watchdog Scripts
+This repository works as a bootstrap for my watchdog service.
+
+## Install
+
+    # git clone git://github.com/W4RH4WK/watchdogScripts.git /root/watchdog
+    # cd /root/watchdog
+    # ./setup
+
+## License
+    "THE BEER-WARE LICENSE" (Revision 42):
+
+    <Ax.Warhawk@gmail.com> wrote this file. As long as you retain this notice
+    you can do whatever you want with this stuff. If we meet some day, and you
+    think this stuff is worth it, you can buy me a beer in return Alex
+    "W4RH4WK" Hirsch
+
+    This project is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.

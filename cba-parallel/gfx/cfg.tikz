@@ -1,0 +1,44 @@
+%\usetikzlibrary{arrows.meta}
+%\usetikzlibrary{positioning}
+
+\tikzstyle{ptr} = [-{Latex[length=2.7mm]}]
+
+\tikzstyle{loop} = [ptr,looseness=10]
+
+\tikzstyle{block} = [
+    draw,
+    align=center,
+    rectangle,
+    minimum height=0.8cm,
+    minimum width=1.6cm
+]
+
+\begin{tikzpicture}
+
+    % main
+    \node[block] (1) {\ttfamily main:};
+    \node[block] (2) at (-1.5,-1.4) {\ttfamily print\_usage()};
+    \node[block] (3) at ( 1.5,-1.4) {\ttfamily print\_something(\dots)};
+    \node[block] (4) [below = 2cm of 1] {\ttfamily return};
+    \path[ptr] (1) edge (2)
+               (1) edge (3)
+               (2) edge (4)
+               (3) edge (4);
+
+    % print_usage
+    \node[block] (5) [below = of 4] {\ttfamily print\_usage:};
+    \node[block] (6) [below = of 5] {\ttfamily puts(\dots)};
+    \node[block] (7) [below = of 6] {\ttfamily return};
+    \path[ptr] (5) edge (6)
+               (6) edge (7);
+
+    % print something
+    \node[block] (8)  [below = of 7] {\ttfamily print\_something:};
+    \node[block] (9)  [below = of 8] {\ttfamily puts(\dots)};
+    \node[block] (10) [below = of 9] {\ttfamily return};
+    \path[ptr] (8) edge (9)
+               (8) edge[bend left = 60pt] (10)
+               (9) edge[loop left] (9)
+               (9) edge (10);
+
+\end{tikzpicture}

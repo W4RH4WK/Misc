@@ -1,0 +1,1 @@
+Class-Path: lib/dummylib.jar lib/dummylib2.jar

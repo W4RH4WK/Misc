@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- charset -->
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+        <!-- author -->
+        <meta name="author" content="<?php echo $data["author"]; ?>">
+
+        <!-- robots -->
+        <meta name="robots" content="index, follow">
+        <meta name="revisit-after" content="7 days">
+
+        <!-- title -->
+        <title><?php echo $data["title"]; ?></title>
+
+        <!-- rss feed -->
+        <link rel="alternate" type="application/rss+xml" title="Another Stupid CMS feed" href="inc/Rss/feed.rss" />
+
+        <!-- fav icon -->
+        <link rel="shortcut icon" href="style/img/fav.ico" type="image/ico" />
+
+        <!-- bootstrap css -->
+        <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- lightbox css -->
+        <link rel="stylesheet" type="text/css" href="lib/lightbox/css/lightbox.css" />
+
+        <!-- custom css -->
+        <link rel="stylesheet" type="text/css" href="style/override.css" />
+        <link rel="stylesheet" type="text/css" href="style/style.css" />
+        <?php if ($data["loggedin"]) { ?>
+            <link rel="stylesheet" type="text/css" href="style/sidemenu/style.css" />
+        <?php } ?>
+
+        <?php if ($data["markitup"]) { ?>
+            <link rel="stylesheet" type="text/css" href="lib/markitup/skins/markitup/style.css" />
+            <link rel="stylesheet" type="text/css" href="lib/markitup/sets/markdown/style.css" />
+        <?php } ?>
+
+        <!-- jquery -->
+        <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="lib/jquery/settings.js"></script>
+
+        <!-- bootstrap -->
+        <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+        <!-- lightbox -->
+        <script type="text/javascript" src="lib/lightbox/js/lightbox.js"></script>
+
+        <!-- additional includes -->
+        <?php echo $data["incsHead"]; ?>
+
+    </head>
+    <body>
+
+        <!-- logo -->
+        <div id="logo">
+            <img src="style/img/logo.png" alt="logo" />
+        </div>
+
+        <!-- main page -->
+        <div id="page">
+            <header>
+                <div class="row-fluid">
+                    <div class="span8">
+                        <nav>
+                            <?php echo Core::load("Nav")->show("root", "bootstrap"); ?>
+                        </nav>
+                    </div>
+                    <div class="span4">
+                        <h3>Another Stupid CMS</h3>
+                    </div>
+                </div>
+            </header>
+
+            <section>
+                <?php echo $data["content"]; ?>
+            </section>
+
+            <footer>
+                <div class="row-fluid">
+                    <div class="span4">
+                        <!-- AddThis Button BEGIN -->
+                        <div class="addthis_toolbox addthis_default_style">
+                            <a class="addthis_button_preferred_1"></a>
+                            <a class="addthis_button_preferred_2"></a>
+                            <a class="addthis_button_preferred_3"></a>
+                            <a class="addthis_button_preferred_4"></a>
+                            <a class="addthis_button_compact"></a>
+                        </div>
+                        <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc889c352ddddc"></script>
+                        <!-- AddThis Button END -->
+                    </div>
+                    <div class="span4" style="text-align: center;"><?php echo $data["author"]; ?></div>
+                    <div class="span4" style="text-align: right;"><?php echo Core::version; ?></div>
+                </div>
+            </footer>
+
+            <!-- Message Box -->
+            <?php 
+                $m = Core::load("MsgHandler")->getMsg();
+                if ($m != "")
+                    echo "<div id=\"messages\">".$m."</div>";
+            ?>
+
+        </div>
+
+        <!-- link panel below page -->
+        <div id="links">
+            <a href="http://www.w3.org/html/logo/" rel="tooltip" title="This page uses HTML 5"><img src="style/img/html5.png" alt="HTML 5" /></a>
+            <a href="http://www.w3.org/Style/CSS/" rel="tooltip" title="This page uses CSS 3"><img src="style/img/css3.png" alt="CSS 3" /></a>
+            <a href="http://github.com/W4RH4WK/AS-CMS" rel="tooltip" title="Opensource on Github"><img src="lib/glyphicons/glyphicons_381_github.png" alt="Github" /></a>
+            <a href="http://twitter.github.com/bootstrap/index.html" rel="tooltip" title="Twitter Bootstrap is used"><img src="style/img/bootstrap.ico" alt="Bootstrap" /></a>
+            <a href="http://jquery.com/" rel="tooltip" title="JQuery is used"><img src="style/img/jquery.png" alt="JQuery" /></a>
+            <a href="http://lokeshdhakar.com/projects/lightbox2/" rel="tooltip" title="Lightbox is used"><img src="style/img/lightbox.gif" alt="Lightbox 2" /></a>
+            <a href="http://glyphicons.com/" rel="tooltip" title="Icons by Glyphicons"><img src="style/img/glyph.ico" alt="Glyph Icons" /></a>
+            <a href="inc/Rss/feed.rss" rel="tooltip" title="RSS feed here"><img src="lib/glyphicons/glyphicons_397_rss.png" alt="RSS Feed" /></a>
+            <?php if ($data["loggedin"]) { ?>
+                <a href="?logout=1" rel="tooltip" title="Logout"><img src="lib/glyphicons/glyphicons_023_cogwheels.png" alt="logout" /></a>
+            <?php } else { ?>
+                <a href="#loginform" rel="tooltip" title="Login" data-toggle="modal"><img src="lib/glyphicons/glyphicons_023_cogwheels.png" alt="login" /></a>
+            <?php } ?>
+        </div>
+        <script type="text/javascript">
+            $("#links a").tooltip();
+        </script>
+
+        <?php if ($data["loggedin"]) { ?>
+            <!-- side menu for administration -->
+            <div id="sidemenu" class="well">
+                <div id="navhdr" onclick="toggleSidemenu()"><img src="lib/glyphicons/glyphicons_023_cogwheels.png" alt="edit page" /></div>
+                <ul id="navmenu" class="nav nav-list">
+                    <li class="nav-header">Components</li>
+                    <?php echo $data["sidemenuEntries"]; ?>
+                    <li class="divider"></li>
+                    <li><a href="?logout=1"><i class="icon-off"></i> Logout</a></li>
+                </ul>
+            </div>
+            <script type="text/javascript" src="style/sidemenu/showhide.js"></script>
+        <?php } ?>
+
+        <?php if (!$data["loggedin"]) { ?>
+            <!-- login box -->
+            <div class="modal hide fade" id="loginform">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h3>Login</h3>
+                </div>
+                <form class="well form" method="post">
+                    <div class="modal-body">
+                        <p>
+                            <input type="text" name="user" id="loginform-user" placeholder="Username" /><br />
+                            <input type="password" name="pass" id="loginform-pass" placeholder="Password" />
+                        </p>
+                        <p><span class="label label-important">do not use internet explorer</span></p>
+                        <p>Get <a href="http://www.mozilla.org/en-US/firefox">Firefox</a> or <a href="http://www.google.com/chrome">Chrome</a></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <a href="#" class="btn" data-dismiss="modal">Close</a>
+                    </div>
+                </form>
+            </div>
+            <script type="text/javascript">
+                $("#loginform").on("shown", function() {
+                    $("#loginform-user").focus();
+                });
+            </script>
+        <?php } ?>
+
+        <?php if ($data["markitup"]) { ?>
+            <!-- mark it up -->
+            <script type="text/javascript" src="lib/markitup/jquery.markitup.js"></script>
+            <script type="text/javascript" src="lib/markitup/sets/markdown/set.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $(".markItUp").markItUp(mySettings);
+                });
+            </script>
+        <?php } ?>
+
+    </body>
+</html>

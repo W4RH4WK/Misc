@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <atom:link href="http://w4rh4wk.dyndns.org/ascms/inc/Rss/feed.rss" rel="self" type="application/rss+xml"/>
+    <title>Another Stupid CMS</title>
+    <link>http://w4rh4wk.dyndns.org/ascms</link>
+    <description>AS CMS RSS Feed</description>
+    <item>
+      <title>AS-CMS setup</title>
+      <link>http://w4rh4wk.dyndns.org/ascms/index.php</link>
+      <pubDate>Thu, 12 Jul 2012 21:50:12 +0200</pubDate>
+      <description>AS-CMS has just been setup</description>
+    </item>
+  </channel>
+</rss>

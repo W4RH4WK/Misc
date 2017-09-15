@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# exit if not root
+if [ $EUID -ne 0 ]; then
+    echo "run as root"
+    exit 1
+fi
+
+apt-get -y install python
+mkdir files
+
+cp -i daily.example.py daily.py
+cp -i hourly.example.py hourly.py
+
+# add to crontab
+echo "# watchdog" >> /etc/crontab
+echo "#40 *  * * * root python /root/watchdog/hourly.py" >> /etc/crontab
+echo "#45 23 * * * root python /root/watchdog/daily.py" >> /etc/crontab
+
+# add public key
+echo 'command="rsync --server --sender -trze.iLsf . watchdog/files/" ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQvCNbiBSx16ObiVhL0SwYo6qby48VteycR2DpHY2KptkLOaUpsvI/xqNu3jUgqaSEJIkZdu524XjXGiNlkipowJDD1oEQoLEXqd+A/HqricfDJILl2RFj33Utk1kMnyWrEN1pPkOIDXX6E5DVQ4VkvbRJxowa4FUrhrL5vSRqKlAMec22FZRvRBRU47SDajVsJdlf0aaxep2rCpSnzh5tWT5w/1GzWU4SHzWn7E6Va6q5og8/sf1ECJmCbQB6cWNg79YrzYy4QdG03XGEMFh5s5SaBn9YJ5n/ztOLJ6B3R3RR3mrFlISRiApK91z0LYNdQh0y2noOslTZoCOVRzZz watchdog@watchdog.bluephoenix.at' >> /root/.ssh/authorized_keys

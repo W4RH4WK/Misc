@@ -1,0 +1,88 @@
+" -------------------------------------------------- BASICS
+set nocompatible
+filetype plugin indent on
+syntax on
+set shell=bash
+
+" handling
+set backspace=indent,eol,start
+set foldignore=" "
+set foldmethod=indent
+set formatoptions=cqrt
+set ignorecase
+set incsearch
+set smartcase
+set timeoutlen=500
+
+" visual
+set background=dark
+set encoding=utf-8
+set laststatus=2
+set lazyredraw
+set listchars=tab:>\ ,eol:\
+set nohlsearch
+set nowrap
+set ruler
+set showcmd
+set ttyfast
+
+" file handling
+set fileencoding=utf-8
+set history=50
+set modeline
+set noswapfile
+set tags=./.tags;/
+set viminfo="NONE"
+
+" formating
+set autoindent          " automatically indent lines
+set expandtab           " use spaces to indent
+set shiftwidth=4        " number of spaces for indent
+set smarttab            " backspace over tabs
+set softtabstop=4       " tab = softtabstop * spaces
+set tabstop=4           " tab stop distance
+
+" set omnifunc
+autocmd FileType c set omnifunc=ccomplete#Complete
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+set completeopt=menu
+
+" -------------------------------------------------- COLOR
+if $TERM == 'linux'
+    set t_Co=8
+else
+    set t_Co=256
+endif
+colorscheme torte
+
+" -------------------------------------------------- KEYBINDINGS
+" disable forward / backward (tmux)
+noremap <c-b> <NOP>
+noremap <c-f> <NOP>
+
+" redraw screen
+nnoremap <leader>r <ESC>:redraw!<CR>
+
+" save as root
+nnoremap <leader>w <ESC>:w !sudo tee % > /dev/null<CR>
+
+" tab switch
+nnoremap <Tab> <ESC>:tabn<CR>
+nnoremap <S-Tab> <ESC>:tabp<CR>
+
+" toggle paste mode
+set pastetoggle=<F2>
+
+" trim trailing whitespace
+nnoremap <leader>t <ESC>:%s/\s\+$//<CR>
+
+" window movement
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l

@@ -1,0 +1,7 @@
+# ls
+alias ls="ls --classify --color=force --group-directories-first --human-readable"
+alias ll="ls -al"
+alias l="ls -l"
+
+alias tree="tree -F --dirsfirst"
+alias ack="ack-grep -r --smart-case"

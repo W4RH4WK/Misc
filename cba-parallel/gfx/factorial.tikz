@@ -1,0 +1,36 @@
+%\usetikzlibrary{arrows.meta}
+%\usetikzlibrary{positioning}
+
+\tikzstyle{ptr} = [-{Latex[length=2.7mm]}]
+
+\tikzstyle{loop} = [ptr,looseness=10]
+
+\tikzstyle{block} = [
+    draw,
+    align=center,
+    rectangle,
+    minimum height=0.8cm,
+    minimum width=1.6cm
+]
+
+\begin{tikzpicture}
+
+    \node[block] (1) {\ttfamily y = x};
+    \node[block] (2) [below = of 1] {\ttfamily z = 1};
+    \node[block] (3) [below = of 2] {\ttfamily y > 1};
+    \node[block] (4) at (-2,-5.5) {\ttfamily z = z * y};
+    \node[block] (5) [below = of 4] {\ttfamily y = y - 1};
+    \node[block] (6) at (2,-5.5) {\ttfamily y = 0};
+
+    \path[ptr] (1) edge (2)
+               (2) edge (3)
+               (3) edge node[midway,left]  {true}  (4)
+               (3) edge node[midway,right] {false} (6)
+               (4) edge (5);
+
+    \draw[ptr] (5.south) |- ++(-1.5,-0.5) |- (3.west);
+
+    \foreach \x in {1,...,6}
+        \node at ($(\x.east)+(0.25,0)$) {\x};
+
+\end{tikzpicture}

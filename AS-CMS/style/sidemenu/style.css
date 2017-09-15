@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+#sidemenu {
+    _display: none;
+    cursor: pointer;
+    left: 0;
+    margin: 0;
+    max-width: 148px;
+    min-width: 60px;
+    overflow: hidden;
+    padding: 0;
+    position: fixed;
+    top: 180px;
+    z-index: 1000;
+}
+
+#sidemenu #navmenu {
+    display: none;
+}
+
+#sidemenu #navhdr {
+    text-align: center;
+    padding: 5px 0px;
+}
+

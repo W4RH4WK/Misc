@@ -1,0 +1,12 @@
+[alias]
+    c = checkout
+    l = log --all --graph --oneline --decorate
+    s = status
+    g = grep --break --heading --line-number
+[color]
+    ui = true
+[core]
+    editor = vim
+[grep]
+    extendRegexp = true
+    lineNumber = true

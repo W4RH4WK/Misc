@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+from pygments import lexers
+from pandocfilters import toJSONFilter, CodeBlock, RawBlock
+
+
+def codeBlock(key, value, format, meta):
+    if key != "CodeBlock":
+        return
+    [[id, cls, keyvals], rawCode] = value
+
+    for c in cls:
+        try:
+            lexers.get_lexer_by_name(c)
+        except lexers.ClassNotFound:
+            continue
+        else:
+            language = c
+            break
+    else:
+        language = 'text'
+
+    opts = ['fontsize=\\scriptsize',
+            'frame=leftline',
+            'framesep=2mm',
+            'numbersep=2mm',
+            'xleftmargin=6mm',
+            'breaklines']
+
+    if 'numberLines' in cls:
+        opts.append('linenos')
+
+    return RawBlock('latex', r'\begin{minted}[' + ','.join(opts) + ']{' +
+                             language + '}\n' + rawCode + '\n\\end{minted}')
+
+
+if __name__ == '__main__':
+    toJSONFilter(codeBlock)

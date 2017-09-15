@@ -1,0 +1,335 @@
+% 2015 | UIBK
+% vim:set spell tw=79:
+
+\documentclass{uibk}
+\title{Example Document}
+\subtitle{Compressed Template}
+\author{Alex Hirsch}
+\date{2015-01-01}
+
+\usepackage{lipsum}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{automata}
+\usetikzlibrary{shapes.multipart}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\begin{document}
+
+\maketitle
+
+\section*{Abstract}
+\label{sec:abstract}
+
+This document acts as template and showcase. Most parts have been altered and
+copied from other documents, therefore they may not be true and out of context.
+Page breaks have been added to simplify navigation, do not use them so
+excessively in your documents.
+
+\section{Sectioning}
+\label{sec:sectioning}
+
+\lipsum[1]
+
+\subsection{subsection name}
+\label{sub:subsection_name}
+
+\lipsum[2]
+
+\lipsum[2]
+
+\subsubsection{subsubsection name}
+\label{ssub:subsubsection_name}
+
+\lipsum[2]
+
+\paragraph{paragraph name}
+\label{par:paragraph_name}
+
+\lipsum[2]
+
+\newpage
+
+\section{Basics}
+\label{sec:basics}
+
+Bold \textbf{text}
+
+Italic \textit{text}
+
+Underlined \underline{text}
+
+Emphasized \emph{text}
+
+Monospace \texttt{text}
+
+Strikeout \st{text}
+
+Using roman numbers like \rom{4} + \rom{29} = \rom{33}
+
+\newpage
+
+\section{Math Ahead}
+\label{sec:math_ahead}
+
+\begin{notation}[image representation]
+    If not otherwise specified we always assume that an image is a 8-bit gray
+    scaled image which has been transformed into vector form, that means every
+    pixel is listed sequentially in a row vector with values ranging from $0$
+    to $255$ indicating the corresponding pixel intensity.
+\end{notation}
+
+\begin{definition}[LSB-flipped]
+    Let $N \in \mathbb{N}_{\ge 1}$ and $x \in \{0, \dots, 255\}^N$ be an image
+    in vector form. $\forall i \in \{1, \dots, N\}$ we define
+    \begin{align*}
+        & \bar{x}_i := x_i + (-1)^{x_i}
+        & \bar{x}   := \left(\bar{x}_j\right)_{j \in \{0, \dots, N\}}
+    \end{align*}
+    $\bar{x}$ is the image with all least significant bits flipped.
+\end{definition}
+
+\begin{theorem}
+    \label{theo:t1_parts}
+    Let $N \in \mathbb{N}_{\ge 1}$, $J \subseteq \{1, \dots, N\}$, $J \neq
+    \emptyset$ and $q \in \left[0, 1\right]$ such that $\frac{q |J|}{2} \in
+    \mathbb{N}_{\ge 0}$. Let $x \in \{0, \dots, 255\}^N$ be an image and $s \in
+    \{0, \dots, 255\}^N$ be the same image containing stego data (embedded
+    using LSB replacement) and exactly $\frac{q |J|}{2}$ least significant bits
+    flipped of pixels with indices from $J$.
+    Then
+    \begin{align*}
+        & q = 2 \argmin_\alpha D(\alpha)
+        & D(\alpha) := \frac{1}{|J|} \sum\limits_{j \in J} \left(s_i^\alpha - x_i\right)^2
+    \end{align*}
+\end{theorem}
+
+\begin{proof}
+    \begin{align*}
+        D(\alpha) &= \frac{1}{|J|} \sum\limits_{j \in J} \left(s_i^\alpha - x_i\right)^2 = \frac{1}{|J|} \sum\limits_{j \in J} \left(\alpha \bar{s}_i + (1-\alpha) s_i - x_i\right)^2\\
+                  &= \frac{1}{|J|} \left(\sum\limits_{\substack{j \in J\\ s_j = x_j}} \left(\alpha (\bar{s}_j - s_j)\right)^2 + \sum\limits_{\substack{j \in J\\ s_j \neq x_j}} \left((1 - \alpha) (s_j - \bar{s}_j)\right)^2 \right)\\
+                  &= \frac{1}{|J|} \left(\sum\limits_{\substack{j \in J\\ s_j = x_j}} \alpha^2 + \sum\limits_{\substack{j \in J\\ s_j \neq x_j}} (1-\alpha)^2 \right)\\
+                  &= \frac{1}{|J|} \left(|J| - \frac{q |J|}{2}\right) \alpha^2 + \frac{1}{|J|} \frac{q |J|}{2} (1 - \alpha)^2\\
+                  &= \left(1 - \frac{q}{2}\right) \alpha^2 + \frac{q}{2} (1-\alpha)^2
+    \end{align*}
+
+    Thus $\frac{d D(\alpha)}{d\alpha} = 2 \alpha - q $ is $0$ when $\alpha =
+    \frac{q}{2}$ and this $\alpha$ is the unique minima of $D$.
+\end{proof}
+
+\begin{proof}
+    \begin{align*}
+        \text{〈1〉:} && l_2 &= f_1(r_0) \oplus l_0 \\
+        \text{〈2〉:} && r_2 &= f_2(f_1(r_0) \oplus l_0) \oplus r_0 \\[-0.8em]
+        \cline{1-6}
+        \text{〈3〉:} && f_2(l_2) \oplus r_2 &= f_2(l_2) \oplus f_2(f_1(r_0) \oplus l_0) \oplus r_0
+        && \text{〈2〉 $\oplus$ with $f_2(l_2)$} \\
+        \text{〈4〉:} && f_2(f_1(r_0) \oplus l_0) \oplus r_2 &= f_2(f_1(r_0) \oplus l_0) \oplus f_2(f_1(r_0) \oplus l_0) \oplus r_0
+        && \text{expand $l_2$ with 〈1〉} \\
+        \text{〈5〉:} && f_2(f_1(r_0) \oplus l_0) \oplus r_2 &= r_0
+        && \text{reduce right side} \\
+        \text{〈6〉:} && f_1(r_0) \oplus l_2 &= f_1(r_0) \oplus f_1(r_0) \oplus l_0
+        && \text{〈1〉 $\oplus$ with $f_1(r_0)$} \\
+        \text{〈7〉:} && f_1(r_0) \oplus l_2 &= l_0
+        && \text{reduce right side} \\
+        \text{〈8〉:} && f_2(f_1(r_0) \oplus f_1(r_0) \oplus l_2) \oplus r_2 &= r_0
+        && \text{〈5〉 expand $l_0$ with 〈7〉} \\
+        \text{〈9〉:} && f_2(l_2) \oplus r_2 &= r_0
+        && \text{reduce left side} \\[-0.8em]
+        \cline{1-6}
+        && f_1(f_2(l_2) \oplus r_2) \oplus l_2 &= l_0 && \text{〈7〉 expand $r_0$ with 〈9〉} \\
+        && f_2(l_2) \oplus r_2 &= r_0 && \text{〈9〉}
+    \end{align*}
+
+    No need for ${f_1}^{-1}$ or ${f_2}^{-1}$.
+\end{proof}
+
+\begin{corollary}[using adapted WS-estimator with local weights for estimating payload ratio in the border of an image]
+    Let $N \in \mathbb{N}_{\ge 1}$, $J := \{j \mid j \in \{1, \dots, N\}
+    \land j \text{ is border pixel}\}$ and $q \in \left[0, 1\right]$ such that
+    $\frac{q |J|}{2} \in \mathbb{N}_{\ge 0}$. Let $x \in \{0, \dots, 255\}^N$
+    be an image, $s \in \{0, \dots, 255\}^N$ be the same image containing stego
+    data (embedded using LSB replacement) and exactly $\frac{q |J|}{2}$ least
+    significant bits flipped of pixels with indices from $J$. Let $(w_j)_{j \in
+    J}$ be the family of weights with $\sum\limits_{j \in J}w_j = 1$. Then
+    \[
+        q + r(x, s) = \tilde{q} := 2 \argmin_\alpha D(\alpha) = \sum\limits_{j \in J} w_j (s_j - \mathcal{F}(s)_j) (s_j - \bar{s}_j)
+    \]
+    \[
+        D(\alpha) := \frac{1}{|J|} \sum\limits_{j \in J} w_j \left(s_i^\alpha - \mathcal{F}(s)_i\right)^2
+    \]
+    \[
+        r(x, s) := \frac{1}{|J|} \sum\limits_{j \in J} w_j \left((x_j - \mathcal{F}(x)_j)(\bar{s}_j - s_j)\right) + \frac{1}{|J|} \sum\limits_{j \in J} w_j \left((\mathcal{F}(x)_j - \mathcal{F}(s)_j)(\bar{s}_j - s_j)\right)
+    \]
+\end{corollary}
+
+\newpage
+
+\section{Fancy Imagery}
+\label{sec:fancy_imagery}
+
+\subsection{Figures}
+\label{sub:figures}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{its_logo.pdf}
+    \captionof{figure}{ITS Logo illustrating Figures with captions}
+    \label{fig:its_logo}
+\end{figure}
+
+\subsection{TIKZ}
+\label{sub:tikz}
+
+\begin{figure}[h]
+    \centering
+    \input{gfx/fsm.tikz}
+    \caption{TikZ example 1}
+    \label{fig:tikz1}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \input{gfx/payload.tikz}
+    \caption{TikZ example 2}
+    \label{fig:tikz2}
+\end{figure}
+
+\subsection{Plots}
+\label{sub:plots}
+
+\begin{center}
+    \input{gfx/plot.tex}
+\end{center}
+
+\newpage
+
+\section{Misc Useful Stuff}
+\label{sec:misc_useful_stuff}
+
+\subsection{SI Package}
+\label{sub:si_package}
+
+Please use the SI package whenever possible, also binary units are available,
+\SI{1024}{\mega\byte}.
+
+\subsection{Menukeys Package}
+\label{sub:menukeys_package}
+
+\menu{Server > Open easy settings > 2. Windows Accounts > Add}
+
+\directory{\%windir\%/system32/WindowsPowerShell/v1.0/Modules}
+
+\keys{cmd + R}
+
+\subsection{Block Quote}
+\label{sub:block_quote}
+
+Block quotes can be used solo\dots
+
+\begin{quote}
+    Windows Management Framework 4.0 includes updates to Windows PowerShell,
+    Windows PowerShell ISE, Windows PowerShell Web Services (Management OData
+    IIS Extension), Windows Remote Management (WinRM), Windows Management
+    Instrumentation (WMI), the Server Manager WMI provider, and a new feature
+    for 4.0, Windows PowerShell Desired State Configuration (DSC).
+\end{quote}
+
+\dots or nested
+
+\begin{quote}
+    Windows Management Framework 4.0 includes updates to Windows PowerShell,
+    Windows PowerShell ISE, Windows PowerShell Web Services (Management OData
+    IIS Extension), Windows Remote Management (WinRM), Windows Management
+
+    \begin{quote}
+        Windows Management Framework 4.0 includes updates to Windows PowerShell,
+        Windows PowerShell ISE, Windows PowerShell Web Services (Management OData
+        IIS Extension), Windows Remote Management (WinRM), Windows Management
+        Instrumentation (WMI), the Server Manager WMI provider, and a new feature
+        for 4.0, Windows PowerShell Desired State Configuration (DSC).
+    \end{quote}
+
+    Instrumentation (WMI), the Server Manager WMI provider, and a new feature
+    for 4.0, Windows PowerShell Desired State Configuration (DSC).
+\end{quote}
+
+small block quote
+
+\begin{quote}
+    Windows Management Framework 4.0 \dots
+\end{quote}
+
+\subsection{Links}
+\label{sub:links}
+
+Hyperlink to our webpage \url{http://it-syndikat.org}.
+
+\newpage
+
+\section{Use the Source Luke}
+\label{sec:use_the_source_luke}
+
+\subsection{Simple}
+\label{sub:simple}
+
+\begin{code}
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int main(int argc, char *argv[]) {
+        puts("Hello World");
+        return EXIT_SUCCESS;
+    }
+\end{code}
+
+\subsection{With Highlighting}
+\label{sub:with_highlighting}
+
+\begin{ccode}
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int main(int argc, char *argv[]) {
+        puts("Hello World");
+        return EXIT_SUCCESS;
+    }
+\end{ccode}
+
+\subsection{External File}
+\label{sub:external_file}
+
+\cfile{src/hello.c}
+
+\subsection{With Additional Options}
+\label{sub:with_additional_options}
+
+% star need if additional options are required
+\begin{ccode*}{breaklines,linenos=false}
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int main(int argc, char *argv[]) {
+        puts("Hello World, this is a really really really really really really really really really really really really really really really really really really really really really really really really really really really really long line.");
+        return EXIT_SUCCESS;
+    }
+\end{ccode*}
+
+\subsection{As Listing}
+\label{sub:as_listing}
+
+\begin{listing}[h!]
+    \begin{ccode}
+        #include <stdio.h>
+        #include <stdlib.h>
+
+        int main(int argc, char *argv[]) {
+            puts("Hello World");
+            return EXIT_SUCCESS;
+        }
+    \end{ccode}
+    \caption{UART interrupt service routine}
+    \label{lst:uart_isr}
+\end{listing}
+
+\end{document}

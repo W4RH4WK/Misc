@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+#page header h3 {
+    line-height: normal;
+    margin: 0px;
+}
+
+#page nav .nav {
+    margin-bottom: 0px;
+}
+
+#page nav .nav > li > a {
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+
+#page nav .nav-pills .dropdown-menu {
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+
+#page footer .row-fluid [class*="span"] {
+    min-height: 0;
+}
+
+#page #messages .alert {
+    margin: 4px 0px;
+}
+
+#page #messages .alert .close {
+    font-size: 14px;
+}
+
+#page #messages .backtrace {
+    font-size: 10px;
+    margin-bottom: 0px;
+    padding-left: 20px;
+}
+
+#page #messages .backtrace li {
+    line-height: normal;
+}
+
+.modal {
+    width: 820px;
+    margin-left: -410px;
+}
