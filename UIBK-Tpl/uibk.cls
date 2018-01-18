@@ -68,9 +68,9 @@
 % font
 \usepackage[math]{iwona}
 \usepackage[no-math]{fontspec}
-    \setmainfont{DroidSerif}
+    \setmainfont{Noto Serif}
     \setsansfont{Ubuntu Light}
-    \setmonofont{DroidSansMono}[Scale=0.8]
+    \setmonofont{Noto Mono}[Scale=0.8]
     \renewcommand{\familydefault}{\sfdefault}
 
 % font sizes
