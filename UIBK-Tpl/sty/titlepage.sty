@@ -4,13 +4,11 @@
     \let\subsectionmark\@gobble
     \def\@oddhead{
         \vspace{4mm}
-        \includegraphics[height=6cm]{uibk_logo.pdf}
+        \includegraphics[height=3cm]{uibk_logo.pdf}
         \hfill
-        \vbox to 6cm{
-            \vspace{4mm}
-            \llap{\@uibkLARGE University of Innsbruck}
-            \vfill
-            \llap{\@uibkLarge Institut of Computer Science}
+        \vbox to 3cm{
+            \vspace{7.5mm}
+            \llap{\@uibkLarge Department of Computer Science}
             \vspace{4mm}
             \llap{\@uibkLarge Research Group X}
         }
@@ -25,16 +23,17 @@
     \thispagestyle{uibkfront} {
         \raggedleft
         \null
-        \vspace*{13cm}
+        \vspace*{10cm}
         {\@uibkLARGE\@title}
-        \\[20mm]
+        \\[1cm]
         {\@uibkLarge\textbf{\@author}}
         \vfill\hfill
         {\@uibkLarge\textbf{Term Paper}}
         \\
-        \medskip
+        \bigskip
         {\@uibkLarge\textbf{Supervisor:} Someone}
         \\
+        \medskip
         {\@uibkLarge\@date}
         \\
     }
