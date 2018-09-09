@@ -1,0 +1,279 @@
+ <html>
+<head>
+  <title>Process Scheduling Simulator</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/vis.min.css">
+  <style>
+    body {
+      padding: 1em;
+    }
+
+    input#maxtime {
+      width: 80px;
+    }
+
+    .disclaimer {
+      position: fixed;
+      bottom: 5;
+      left: 5;
+      font-size: 70%;
+      color: grey;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <p>
+      <div class="form-check form-check-inline">
+        <div class="col-auto">
+          <select v-model="scheduler">
+              <option v-for="(_,key) in schedulers">{{key}}</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <label for="maxtime">Simulation Steps</label>
+          <input id="maxtime" v-model="maxtime" type="number" min="1">
+        </div>
+        <div class="col-auto">
+          <label for="preemption">Preemption</label>
+          <input id="preemption" type="checkbox" v-model="preemption">
+        </div>
+      </div>
+    </p>
+
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Process Name</th>
+          <th>Start Time</th>
+          <th>Duration</th>
+          <th v-if="hasPriority">Priority</th>
+          <th v-if="hasTickets">Tickets</th>
+          <th v-if="hasTickets">Quantum Used</th>
+          <th width="0%"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="(process, index) in processes">
+          <td><input v-model="process.name"></td>
+          <td><input v-model.number="process.start" type="number" min="0"></td>
+          <td><input v-model.number="process.duration" type="number" min="1"></td>
+          <td v-if="hasPriority">
+            <input v-model.number="process.priority" type="number" min="1">
+          </td>
+          <td v-if="hasTickets">
+            <input v-model.number="process.tickets" type="number" min="0">
+          </td>
+          <td v-if="hasTickets">
+            <input v-model.number="process.quantum" type="number" min="0" max="1" step="0.1">
+          </td>
+          <td><button @click="removeProcess(index)" class="btn btn-block btn-danger">-</button></td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td v-if="hasPriority"></td>
+          <td v-if="hasTickets"></td>
+          <td v-if="hasTickets"></td>
+          <td><button @click="addProcess" class="btn btn-block btn-primary">+</button></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <p style="text-align: center">
+      <input class="btn btn-primary btn-lg" type="button" value="Simulate (Beta)" @click="runSimulation">
+    </p>
+
+    <div id="timeline"></div>
+  </div>
+
+  <div class="disclaimer">
+    This tool uses <a href="https://developers.google.com/chart/">Google Charts</a>.
+    Note that their terms of service do not allow self-hosting.
+  </div>
+
+  <!--
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['timeline']});
+
+    function nToDate(number) {
+      return new Date(0, 0, 0, 0, 0, number);
+    }
+
+    function drawChart(inputData) {
+      var container = document.getElementById('timeline');
+      var chart = new google.visualization.Timeline(container);
+      var dataTable = new google.visualization.DataTable();
+
+      dataTable.addColumn({ type: 'string', id: 'CPU' });
+      dataTable.addColumn({ type: 'string', id: 'Process' });
+      dataTable.addColumn({ type: 'string', role: 'tooltip' });
+      dataTable.addColumn({ type: 'date', id: 'Start' });
+      dataTable.addColumn({ type: 'date', id: 'End' });
+      dataTable.addRows(inputData);
+      chart.draw(dataTable);
+    }
+  </script>
+  -->
+
+  <script src="js/vis.min.js"></script>
+  <script>
+    function drawChart(items, maxtime) {
+      const options = {
+        type: 'range',
+        stack: false,
+        align: 'left',
+        showMajorLabels: false,
+        timeAxis: {
+          scale: 'millisecond',
+        },
+        min: 0,
+        max: parseInt(maxtime),
+        start: 3,
+        zoomMin: 10,
+        zoomMax: 200,
+      };
+
+      console.log(maxtime);
+      console.log(items);
+
+      const container = document.getElementById('timeline');
+      container.innerHTML = '';
+      const timeline = new vis.Timeline(container, items, options);
+    }
+  </script>
+
+  <script src="js/vue.min.js"></script>
+  <script src="js/schedulers.js"></script>
+
+  <script>
+    'use strict';
+
+    const app = new Vue({
+      el: '#app',
+      data: {
+        scheduler: Object.keys(schedulers)[0],
+        schedulers: schedulers,
+        maxtime: 20,
+        preemption: true,
+        processes: [
+          { name: 'P1', start: 0, duration: 3, priority: 2, tickets: 5, quantum: 1.0 },
+          { name: 'P2', start: 1, duration: 2, priority: 1, tickets: 4, quantum: 0.5 },
+          { name: 'P3', start: 2, duration: 2, priority: 3, tickets: 6, quantum: 0.7 },
+        ]
+      },
+      computed: {
+        hasPriority() { return this.scheduler == 'HPF'; },
+        hasTickets() { return this.scheduler == 'Lottery'; },
+      },
+      methods: {
+        addProcess() {
+          this.processes.push({
+            name: `P${this.processes.length + 1}`,
+            start: 0,
+            duration: 3,
+            priority: 1,
+            tickets: 5,
+            quantum: 0.5,
+          });
+        },
+
+        removeProcess(index) {
+          this.processes.splice(index, 1);
+        },
+
+        timelineRecord(process, start, time) {
+          let tooltip = [
+            `Start: ${start}`,
+            `End: ${time}`,
+            `Left: ${process.timeleft}`
+          ];
+
+          if (this.hasPriority) {
+            tooltip.push(`Priority: ${process.priority}`);
+          }
+
+          if (this.hasTickets) {
+            let tickets = Math.floor(process.tickets * process.compensationFactor);
+            tooltip.push(`Tickets: ${tickets}`);
+          }
+
+          return {
+            content: process.name,
+            title: tooltip.join(' | '),
+            start: start,
+            end: time,
+          };
+        },
+
+        runSimulation() {
+          let starttime = 0;
+
+          let process = false;
+          let lastProcess = false;
+
+          let scheduler = this.schedulers[this.scheduler];
+
+          let timelineData = [];
+
+          for (let time = -1; time < this.maxtime; time++) {
+            // obtain process from scheduler
+            if (!process) {
+              process = scheduler.takeProcess();
+            }
+
+            // mark start
+            if (lastProcess != process) {
+              if (lastProcess) {
+                timelineData.push(this.timelineRecord(lastProcess, starttime, time));
+              }
+
+              starttime = time;
+            }
+
+            // execute
+            if (process) {
+              process.timeleft--;
+            }
+
+            lastProcess = process;
+
+            // insert newly arrived processes
+            for (let i = 0; i < this.processes.length; i++) {
+              let p = this.processes[i];
+              if (p.start == time + 1) {
+                p.timeleft = p.duration;
+                scheduler.addProcess(p);
+              }
+            }
+
+            // handle re-insertion
+            if (process) {
+              if (this.preemption && process.timeleft > 0) {
+                scheduler.addProcess(process);
+              }
+              if (this.preemption || process.timeleft <= 0) {
+                process = false;
+              }
+            }
+          }
+
+          if (lastProcess.timeleft > 0) {
+            timelineData.push(this.timelineRecord(lastProcess, starttime, time));
+          }
+
+          drawChart(timelineData, this.maxtime);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

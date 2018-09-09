@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | Basic demo</title>
+
+  <style type="text/css">
+    body,
+    html {
+      font-family: sans-serif;
+    }
+  </style>
+
+  <link href="css/vis.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div id="visualization"></div>
+
+  <script src="js/vis.min.js"></script>
+  <script>
+    // DOM element where the Timeline will be attached
+    var container = document.getElementById('visualization');
+
+    // Create a DataSet (allows two way data-binding)
+    var items = new vis.DataSet([
+      { content: 'P1', start: 0, end: 1, title: 'exec' },
+      { content: 'P2', start: 1, end: 3, title: 'exec' },
+      { content: 'P3', start: 3, end: 5, title: 'exec' },
+      { content: 'P1', start: 5, end: 7, title: 'exec' },
+    ]);
+
+    // Configuration for the Timeline
+    var options = {
+      type: 'range',
+      stack: false,
+      align: 'left',
+      showMajorLabels: false,
+      timeAxis: {
+        scale: 'millisecond',
+      },
+      min: 0,
+      max: 20,
+      start: 3,
+      zoomMin: 10,
+    };
+
+    // Create a Timeline
+    var timeline = new vis.Timeline(container, items, options);
+  </script>
+</body>
+
+</html>
