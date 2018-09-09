@@ -1,0 +1,200 @@
+#!/bin/bash
+# vim: noet
+
+set -eu
+
+# ------------------------------------------------------------ GLOBAL VARIABLES
+
+target=""
+option_no_git=false
+option_no_details=false
+option_quiet=false
+
+# ------------------------------------------------------------------- FUNCTIONS
+
+print_usage()
+{
+	echo "usage: $0 [OPTIONS] <file>"
+	echo
+	echo "Displayes various information about the given file."
+	echo
+	echo "OPTIONS:"
+	echo "  -h, --help          displays this help message"
+	echo "  -q, --quiet         suppress error output"
+	echo "  --no-git            do not extract Git related information"
+	echo "  --no-details        do not file details"
+	echo
+}
+
+parse_args()
+{
+	ARGS=$(getopt -o hq -l help,quiet,no-git,no-details -- "$@")
+	eval set -- "$ARGS"
+
+	while true; do
+		case "$1" in
+			-h|--help)
+				print_usage
+				exit
+				;;
+
+			-q|--quiet)
+				option_quiet=true
+				shift
+				;;
+
+			--no-git)
+				option_no_git=true
+				shift
+				;;
+
+			--no-details)
+				option_no_details=true
+				shift
+				;;
+
+			--)
+				shift
+				break
+				;;
+
+			*)
+				print_usage
+				exit 1
+				;;
+		esac
+	done
+
+	# expect target file
+	if [[ -z ${1+x} ]]; then
+		print_usage
+		exit
+	fi
+
+	target="$1"
+}
+
+is_valid()
+{
+	[[ -f "$target" ]]
+}
+
+print_divider()
+{
+	echo -en "\n\n\n"
+}
+
+print_basics()
+{
+	echo "File:        $(file -b "$target")"
+	echo "Size:        $(du -sh "$target" | awk '{ print $1 }')"
+
+	local stat_tpl=$(cat <<-END
+		Mode:        %A
+		Owner:       %U
+		Group:       %G
+		Mount:       %m
+
+		Modified:    %y
+		Access:      %x
+	END
+	)
+	stat --format "$stat_tpl" "$target"
+}
+
+print_git()
+{
+	(
+		cd "$(dirname "$target")"
+
+		if ! git rev-parse --is-inside-work-tree 2>/dev/null; then
+			exit
+		fi
+
+		local target_base=$(basename "$target")
+
+		echo
+		echo "Unstaged:   $(git --no-pager diff --shortstat "$target_base" | tr -d '\n')"
+		echo "Staged:     $(git --no-pager diff --staged --shortstat "$target_base" | tr -d '\n')"
+	)
+}
+
+print_details()
+{
+	local mimetype=$(mimetype -b "$target")
+	echo
+	echo "Mimetype:    $mimetype"
+
+	case "$mimetype" in
+		application/x-shellscript) ;&
+		text/*)
+			print_divider
+			print_details_text
+			;;
+
+		image/*)
+			echo
+			print_details_image
+			;;
+
+		audio/*) ;&
+		video/*)
+			echo
+			print_details_av
+			;;
+
+		inode/symlink)
+			;;
+
+		*)
+			hd "$target" | head -n20
+			;;
+	esac
+}
+
+print_details_text()
+{
+	head -n20 "$target"
+}
+
+print_details_image()
+{
+	local identify_tpl=$(cat <<-END
+		Resolution:    %wx%h
+		Depth:         %z
+		Compression:   %C
+		Quality:       %Q
+		Comment:       %c\n
+	END
+	)
+	identify -format "$identify_tpl" "$target"
+}
+
+print_details_av()
+{
+	ffprobe -hide_banner "$target"
+}
+
+# ------------------------------------------------------------------------ MAIN
+
+parse_args "$@"
+
+if ! is_valid; then
+	if ! $option_quiet; then
+		echo "Error: Invlaid file: $target"
+	fi
+	exit 1
+fi
+
+echo "$target"
+echo
+
+print_basics
+
+if ! $option_no_git; then
+	print_git
+fi
+
+if ! $option_no_details; then
+	print_details
+fi
