@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        .particle {
+            width: 24px;
+            height: 24px;
+            position: absolute;
+
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            background-image: radial-gradient(#EB0755,
+                    #EB0755 10%,
+                    rgba(0, 0, 0, 0) 56%);
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function sin01(v) {
+            return Math.abs(Math.sin(v * Math.PI));
+        }
+
+        function lerp(v0, v1, t) {
+            return v0 * (1 - t) + v1 * t
+        }
+
+        class Particle {
+            constructor() {
+                this.e = document.createElement('div');
+                this.e.setAttribute('class', 'particle');
+                document.body.appendChild(this.e);
+
+                this.reset();
+                this.y = Math.random();
+            }
+
+            reset() {
+                this.xStart = Math.random();
+                this.xEnd = Math.random();
+
+                this.y = 0;
+                this.dy = (Math.random() + 1) / 200;
+
+                this.size = Math.random();
+                this.sizeSpeed = Math.random() / 10;
+
+                this.opacity = Math.random();
+                this.opacitySpeed = Math.random() / 10;
+            }
+
+            update(deltaTime) {
+                if (this.y > 1) {
+                    this.reset();
+                }
+
+                this.y += this.dy * deltaTime;
+                let x = lerp(this.xStart, this.xEnd, this.y);
+
+                this.e.style.transform = `translate(${x * 100}vw, ${(1 - this.y) * 100}vh)`;
+
+                this.size += this.sizeSpeed * deltaTime;
+                let size = lerp(0.5, 1.0, sin01(this.size)) * (1 - this.y);
+                this.e.style.transform += ` scale(${size}, ${size})`;
+
+
+                this.opacity += this.opacitySpeed * deltaTime;
+                this.e.style.opacity = lerp(0.2, 1.0, sin01(this.opacity));
+            }
+        }
+
+        const frameRate = 60;
+
+        let particles = [];
+        for (let i = 0; i < 64; i++) {
+            particles.push(new Particle());
+
+        }
+
+        function update() {
+            let deltaTime = 1 / frameRate;
+            particles.forEach(particle => particle.update(deltaTime));
+        }
+
+        setInterval(update, 1000 / frameRate);
+    </script>
+</body>
+
+</html>

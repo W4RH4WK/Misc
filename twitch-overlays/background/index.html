@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="css/particles.css" />
+</head>
+
+<body>
+    <script>
+        for (let i = 0; i < 100; i++) {
+            let circle = document.createElement('div');
+            circle.setAttribute('class', 'circle');
+
+            let container = document.createElement('div');
+            container.setAttribute('class', 'circle-container');
+            container.appendChild(circle);
+
+            document.body.appendChild(container);
+        }
+    </script>
+</body>
+
+</html>
